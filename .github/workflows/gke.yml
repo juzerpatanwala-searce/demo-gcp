@@ -9,7 +9,7 @@ env:
   GKE_CLUSTER: demo-gke-cluster    # TODO: update to cluster name
   GKE_ZONE: asia-south1-a   # TODO: update to cluster zone
   REPOSITORY: ghactions-demo # TODO: update to Artifact Registry docker repository
-  IMAGE: gke-demo
+  IMAGE: demo-gke
 
 jobs:
   setup-build-publish-deploy:
