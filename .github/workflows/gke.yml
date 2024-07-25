@@ -69,6 +69,10 @@ jobs:
     #     kubectl apply -f kubernetes/service.yaml
   Deploy-dev:
     name: Deployment to dev
+    needs: setup-build-publish
+    permissions:
+      contents: 'read'
+      id-token: 'write'
     uses: ./.github/workflows/deploy.yml
     with:
       namespace: dev
