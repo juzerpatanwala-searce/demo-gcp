@@ -26,9 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: GKE
 
-    permissions:
-      contents: 'read'
-      id-token: 'write'
+    # permissions:
+    #   contents: 'read'
+    #   id-token: 'write'
 
     steps:
     - name: Checkout
