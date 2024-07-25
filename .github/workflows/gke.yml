@@ -68,7 +68,7 @@ jobs:
     #     kubectl apply -f kubernetes/deployment.yaml
     #     kubectl apply -f kubernetes/service.yaml
   Deploy-dev:
-    name: Deployment to dev
+    name: Deployment to Dev
     needs: setup-build-publish
     permissions:
       contents: 'read'
@@ -76,6 +76,20 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       namespace: dev
+    secrets:
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+      WIF_SA: ${{ secrets.WIF_SA }}
+  
+  Deploy-Staging:
+    name: Deployment to Staging
+    needs: setup-build-publish
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      namespace: staging
     secrets:
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
       WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
