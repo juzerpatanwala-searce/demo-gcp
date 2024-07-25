@@ -1,0 +1,60 @@
+name: Deploy to GKE
+
+on:
+  workflow_call:
+    inputs:
+      namespace:
+        required: true
+        type: string
+    secrets:
+      PROJECT_ID :
+        required: true
+      WIF_PROVIDER :
+        required: true
+      WIF_SA :
+        required: true
+
+env:
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  GKE_CLUSTER: demo-gke-cluster    # TODO: update to cluster name
+  GKE_ZONE: asia-south1-a   # TODO: update to cluster zone
+  IMAGE: demo-gke
+
+jobs:
+  Deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: GKE
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Configure Workload Identity Federation and generate an access token.
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        token_format: 'access_token'
+        workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+        service_account: ${{ secrets.WIF_SA }}
+
+    # Get the GKE credentials so we can deploy to the cluster
+    - name: Set up GKE credentials
+      uses: google-github-actions/get-gke-credentials@v0
+      with:
+        cluster_name: ${{ env.GKE_CLUSTER }}
+        location: ${{ env.GKE_ZONE }}
+
+    # Deploy the Docker image to the GKE cluster
+    - name: Deploy
+      run: |-
+        sed -i "s/{{NAMESPACE}}/${{ inputs.namespace }}/g" kubernetes/deployment.yaml
+        sed -i "s/{{NAMESPACE}}/${{ inputs.namespace }}/g" kubernetes/service.yaml
+        sed -i "s/{{IMAGE_TAG}}/$GITHUB_SHA/g" kubernetes/deployment.yaml
+        kubectl apply -f kubernetes/deployment.yaml
+        kubectl apply -f kubernetes/service.yaml

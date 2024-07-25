@@ -12,7 +12,7 @@ env:
   IMAGE: demo-gke
 
 jobs:
-  setup-build-publish-deploy:
+  setup-build-publish:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     environment: GKE
@@ -40,13 +40,6 @@ jobs:
         registry: ${{ vars.REGION }}-docker.pkg.dev
         username: oauth2accesstoken
         password: '${{ steps.auth.outputs.access_token }}'
-  
-    # Get the GKE credentials so we can deploy to the cluster
-    - name: Set up GKE credentials
-      uses: google-github-actions/get-gke-credentials@v0
-      with:
-        cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
 
     # Build the Docker image
     - name: Build
@@ -60,10 +53,26 @@ jobs:
     - name: Publish
       run: |-
         docker push "${{ vars.REGION }}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA"
-    # Set up kustomize
-    # Deploy the Docker image to the GKE cluster
-    - name: Deploy
-      run: |-
-        sed -i "s/{{IMAGE_TAG}}/$GITHUB_SHA/g" kubernetes/deployment.yaml
-        kubectl apply -f kubernetes/deployment.yaml
-        kubectl apply -f kubernetes/service.yaml
+
+        # Get the GKE credentials so we can deploy to the cluster
+    # - name: Set up GKE credentials
+    #   uses: google-github-actions/get-gke-credentials@v0
+    #   with:
+    #     cluster_name: ${{ env.GKE_CLUSTER }}
+    #     location: ${{ env.GKE_ZONE }}
+
+    # # Deploy the Docker image to the GKE cluster
+    # - name: Deploy
+    #   run: |-
+    #     sed -i "s/{{IMAGE_TAG}}/$GITHUB_SHA/g" kubernetes/deployment.yaml
+    #     kubectl apply -f kubernetes/deployment.yaml
+    #     kubectl apply -f kubernetes/service.yaml
+  Deploy-dev:
+    name: Deployment to dev
+    uses: ./.github/workflows/deploy.yml
+    with:
+      namespace: dev
+    secrets:
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      WIF_PROVIDER: ${{ secrets.WIF_PROVIDER }}
+      WIF_SA: ${{ secrets.WIF_SA }}
