@@ -24,7 +24,6 @@ jobs:
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: GKE
 
     # permissions:
     #   contents: 'read'
