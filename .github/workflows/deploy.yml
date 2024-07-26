@@ -6,6 +6,9 @@ on:
       namespace:
         required: true
         type: string
+      envirnoment:
+        required: true
+        type: string
     secrets:
       PROJECT_ID :
         required: true
