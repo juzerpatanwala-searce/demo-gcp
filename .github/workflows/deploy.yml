@@ -6,7 +6,7 @@ on:
       namespace:
         required: true
         type: string
-      envirnoment:
+      environment:
         required: true
         type: string
     secrets:
@@ -27,7 +27,7 @@ jobs:
   Deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: ${{ inputs.envirnoment }}
+    environment: ${{ inputs.environment }}
     # permissions:
     #   contents: 'read'
     #   id-token: 'write'
