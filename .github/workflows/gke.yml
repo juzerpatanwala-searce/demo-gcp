@@ -15,7 +15,7 @@ jobs:
   setup-build-publish:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
-    environment: GKE
+    #environment: GKE
 
     permissions:
       contents: 'read'
@@ -70,6 +70,7 @@ jobs:
   Deploy-dev:
     name: Deployment to Dev
     needs: setup-build-publish
+    environment: Dev
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -83,6 +84,7 @@ jobs:
   
   Deploy-Staging:
     name: Deployment to Staging
+    environment: Staging
     needs: setup-build-publish
     permissions:
       contents: 'read'
@@ -97,6 +99,7 @@ jobs:
 
   Deploy-Production:
     name: Deployment to Production
+    environment: Production
     needs: [setup-build-publish,Deploy-Staging]
     permissions:
       contents: 'read'
