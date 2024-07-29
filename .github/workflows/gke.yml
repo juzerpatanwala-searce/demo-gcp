@@ -5,6 +5,7 @@ on:
   push:
     branches: [ "demo3" ]
     paths:
+    - '.github/workflows/gke.yml'
     - 'app1/**'
     - '!app2/**'
 
