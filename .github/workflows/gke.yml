@@ -50,7 +50,7 @@ jobs:
     - name: Build
       working-directory: app1/
       run: |-
-        ls -la app1/
+        ls -la
         docker build \
           --tag "${{ vars.REGION }}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
