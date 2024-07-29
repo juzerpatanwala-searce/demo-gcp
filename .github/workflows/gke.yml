@@ -3,6 +3,9 @@ name: Build and Deploy to GKE
 on:
   push:
     branches: [ "cicd" ]
+    paths:
+    - 'app1/**'
+    - '!app2/**'
 
 env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
@@ -48,7 +51,7 @@ jobs:
           --tag "${{ vars.REGION }}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" \
-          .
+          app1/Dockerfile
     # Push the Docker image to Google Artifact Registry
     - name: Publish
       run: |-
