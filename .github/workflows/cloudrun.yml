@@ -2,7 +2,7 @@ name: Build and Deploy to Cloud Run
 
 on:
   push:
-    branches: [ "cicd" ]
+    branches: [ "demo3" ]
     paths:
     - 'app2/**'
     - '!app1/**'
