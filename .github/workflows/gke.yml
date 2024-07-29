@@ -48,12 +48,11 @@ jobs:
     # Build the Docker image
     - name: Build
       run: |-
-        ls -la
+        ls -la app1/
         docker build \
           --tag "${{ vars.REGION }}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
-          ./app1/Dockerfile
+          --build-arg GITHUB_REF="$GITHUB_REF" app1/Dockerfile
     # Push the Docker image to Google Artifact Registry
     - name: Publish
       run: |-
