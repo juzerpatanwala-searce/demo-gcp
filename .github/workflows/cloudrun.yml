@@ -5,6 +5,7 @@ on:
   push:
     branches: [ "demo3" ]
     paths:
+    - '.github/workflows/cloudrun.yml'
     - 'app2/**'
     - '!app1/**'
 
@@ -47,12 +48,12 @@ jobs:
 
     # Build the Docker image
     - name: Build
+      working-directory: app2/
       run: |-
         docker build \
           --tag "${{ vars.REGION }}-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA" \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" \
-          app2/Dockerfile
+          --build-arg GITHUB_REF="$GITHUB_REF" .
     # Push the Docker image to Google Artifact Registry
     - name: Publish
       run: |-
