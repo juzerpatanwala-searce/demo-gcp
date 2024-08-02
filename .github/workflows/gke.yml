@@ -68,7 +68,7 @@ jobs:
     #     kubectl apply -f kubernetes/deployment.yaml
     #     kubectl apply -f kubernetes/service.yaml
   Deploy-dev:
-    name: Deployment to Dev
+    name: Dev
     needs: setup-build-publish
     permissions:
       contents: 'read'
@@ -83,7 +83,7 @@ jobs:
       WIF_SA: ${{ secrets.WIF_SA }}
   
   Deploy-Staging:
-    name: Deployment to Staging
+    name: Staging
     needs: setup-build-publish
     permissions:
       contents: 'read'
@@ -98,7 +98,7 @@ jobs:
       WIF_SA: ${{ secrets.WIF_SA }}
 
   Deploy-Production:
-    name: Deployment to Production
+    name: Production
     needs: [setup-build-publish,Deploy-Staging]
     permissions:
       contents: 'read'
